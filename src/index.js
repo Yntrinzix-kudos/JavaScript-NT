@@ -1,4 +1,4 @@
-import 'angular';
+import {productController} from './refactored/ProductController'
 import {
     addProductType, 
     mergeProducts, 
@@ -6,26 +6,21 @@ import {
     formatCurrencyPrice
 } from'./refactored/Products.js';
 
-const app = angular.module('main',[]);
-
-            
-app.controller('ProductData', ProductsData)
-
+const lawnMowerType = addProductType(new LawnmowerRepository().getAll(), 'Lawnmower');
+const phoneCaseType = addProductType(new PhoneCaseRepository().getAll(), 'Phone Case');
+const tShirtType = addProductType(new TShirtRepository().getAll(), 'T-Shirt');
+const productTypes = [lawnMowerType, phoneCaseType, tShirtType];
+const products = mergeProducts(productTypes)
 
 function ProductsData ($scope){
 
     $scope.currencies = currencies;
 
-    $scope.products = mergeProducts([
-
-		addProductType(new LawnmowerRepository().getAll(), 'Lawnmower'),
-		addProductType(new PhoneCaseRepository().getAll(), 'Phone Case'),
-        addProductType(new TShirtRepository().getAll(), 'T-Shirt'),
-        
-    ])
+    $scope.products = products;
 
     $scope.formatCurrencyPrice = formatCurrencyPrice
     
 }
 
-ProductsData.$inject = ['$scope'];
+productController(ProductsData)
+
